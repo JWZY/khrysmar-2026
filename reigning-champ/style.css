@@ -1,0 +1,678 @@
+/* ===================================================================
+   Reigning Champ storefront prototype.
+   Layout and visual treatments are 1:1 with the React source from
+   Shopify/shop-client (file paths cited inline).
+   =================================================================== */
+
+:root {
+  /* Theme color (coverDominantColor / primary) for Reigning Champ.
+     Approximation of the dark brown used in the screenshot. */
+  --bg: #2e2218;
+
+  /* adjustedBackgroundColor: dark colors lightened by 8 absolute.
+     features/store/components/StoreThemeProvider/StoreThemeProvider.tsx */
+  --bg-adjusted: #3e3228;
+
+  /* Text */
+  --text: #ffffff;
+  --text-muted: rgba(255, 255, 255, 0.85);
+  --text-secondary: rgba(255, 255, 255, 0.6);
+
+  /* Glass tokens — utils/glassyEffect.ts (non-white branch).
+     backgroundColor: hexToRgba(--bg-adjusted, 0.85) */
+  --glass-bg: rgba(62, 50, 40, 0.85);
+  --glass-border: rgba(62, 50, 40, 1);
+  --glass-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.20),
+    0 0 1px 0 rgba(0, 0, 0, 0.12),
+    0 4px 8px 0 rgba(0, 0, 0, 0.12);
+
+  /* Tile (collection card) — components/Tile/Tile.tsx isStoreCollection branch */
+  --border-image: rgba(255, 255, 255, 0.18);
+  --bg-overlay-inverse-06: rgba(255, 255, 255, 0.08);
+
+  /* Shadows (approximations of `shadow-s` / `shadow-m` from Tailwind+Gravity) */
+  --shadow-s: 0 1px 2px rgba(0, 0, 0, 0.18), 0 2px 6px rgba(0, 0, 0, 0.18);
+  --shadow-m: 0 4px 10px rgba(0, 0, 0, 0.22), 0 8px 22px rgba(0, 0, 0, 0.28);
+
+  /* Brand purple for badges and the omnibox CTA */
+  --accent: #5b3df5;
+  --accent-hover: #4a2fe0;
+
+  /* Cashback badge: SHOP_CASH_COLORS.cashbackBadgeBackground (purple-ish on white).
+     We use the in-screenshot purple for the badge fill. */
+  --badge-cashback-bg: #5b3df5;
+  --badge-cashback-fg: #ffffff;
+
+  /* Layout */
+  --gutter: 16px;
+  --page-max: 1280px;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Inter", "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+body { min-height: 100vh; padding-bottom: 120px; }
+
+/* ===================================================================
+   StoreSash
+   features/store/components/StoreSash.tsx + components/Sash/Sash.tsx
+   Variant: incentiveTransparent → bg-transparent, text-text. h-space-40.
+   =================================================================== */
+.sash {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  justify-content: center;
+  height: 40px;
+  padding: 12px;
+  background: transparent;
+}
+.sash-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: 0;
+  color: var(--text);
+  font-family: inherit;
+  cursor: pointer;
+  padding: 0;
+}
+/* Badge — components/Badge/Badge with cashback variant */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding: 0 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1px;
+}
+.badge-cashback {
+  background: var(--badge-cashback-bg);
+  color: var(--badge-cashback-fg);
+}
+.sash-after {
+  font-size: 13px;
+  font-weight: 500;
+  margin-left: 6px;
+}
+.sash-chevron { color: var(--text); transition: transform 200ms ease; }
+
+/* ===================================================================
+   CoverImage (sticky behind everything)
+   features/store/components/CoverImage/CoverImage.tsx
+
+   StoreScreen wraps this in a container with:
+     mb-[-200px]              (mobile)
+     md:mb-[max(-600px,-55vh)] (desktop)
+   so subsequent siblings overlay the cover.
+   =================================================================== */
+.cover-sticky {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  margin-bottom: -200px;
+  padding-top: 20px;            /* pt-space-20 on the sticky wrapper */
+  z-index: 0;
+}
+@media (min-width: 768px) {
+  .cover-sticky { margin-bottom: max(-600px, -55vh); }
+}
+
+.cover {
+  position: relative;
+  width: 100%;
+  max-width: 1600px;
+  height: 200px;
+  max-height: 600px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+@media (min-width: 768px) {
+  .cover { height: 55vh; }
+}
+
+.cover-media { position: absolute; inset: 0; }
+.cover-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* bg-bg-overlay-fixed-dark-40 (mobile only). Hidden ≥ md per `md:hidden`. */
+.cover-scrim-mobile {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+}
+@media (min-width: 768px) { .cover-scrim-mobile { display: none; } }
+
+/* Bottom gradient: linear-gradient(0deg, backgroundColor 0%, transparent 80%). */
+.cover-gradient-bottom {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(0deg, var(--bg) 0%, rgba(0, 0, 0, 0) 80%);
+  pointer-events: none;
+}
+
+/* ===================================================================
+   Hero overlay (content stacked above the sticky cover)
+   =================================================================== */
+.hero-overlay {
+  position: relative;
+  z-index: 10;
+  pointer-events: none;
+}
+.hero-overlay > * { pointer-events: auto; }
+
+/* Header row: menu (left) + follow (right).
+   StoreScreen renders these as two siblings with `sticky top-space-20`. */
+.header-row {
+  position: sticky;
+  top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--gutter);
+  max-width: var(--page-max);
+  margin: 0 auto;
+  z-index: 20;
+  pointer-events: none;
+}
+@media (min-width: 1024px) { .header-row { top: 28px; } }
+.header-row > * { pointer-events: auto; }
+
+/* ===================================================================
+   Glassy buttons — components/Button/Button.tsx applyGlassyStyles +
+   utils/glassyEffect.ts (non-white branch, backgroundColor=adjusted).
+   Plus global .glassy-effect class that adds backdrop-filter blur.
+   =================================================================== */
+.glassy {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 14px;
+  border-radius: 999px;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  background-color: var(--glass-bg);
+  border: 0.5px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  transition: transform 120ms ease, background-color 120ms ease;
+}
+.glassy:active { transform: scale(0.99); }
+.glassy:hover  { background-color: rgba(62, 50, 40, 0.92); }
+
+/* Menu button: pads logo-circle + hamburger. p-space-4 pr-space-10. */
+.menu-button {
+  padding: 4px 10px 4px 4px;
+  gap: 6px;
+}
+.merchant-logo {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: inline-block;
+  flex-shrink: 0;
+}
+.merchant-logo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.follow-button { padding: 0 16px; }
+
+/* ===================================================================
+   StoreData
+   features/store/components/StoreData/StoreData.tsx
+   Container height = h-[calc(25vh*.7)] mobile / md:h-[calc(50vh*.7)].
+   Wordmark image: max-h-[80px] max-w-[180px] md:max-h-[180px] md:max-w-[400px].
+   Rating: mt-space-12 lg:mt-space-24.
+   =================================================================== */
+.store-data {
+  position: relative;
+  z-index: 12;
+  margin-top: -40px;       /* pull up under header */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: calc(25vh * 0.7);
+}
+@media (min-width: 768px) {
+  .store-data { height: calc(50vh * 0.7); }
+}
+.wordmark-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.wordmark {
+  display: block;
+  max-width: 180px;
+  max-height: 110px;
+  filter: drop-shadow(0 2px 12px rgba(0, 0, 0, 0.4));
+}
+@media (min-width: 768px) {
+  .wordmark { max-width: 360px; max-height: 200px; }
+}
+.rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 12px;
+  background: transparent;
+  border: 0;
+  color: var(--text-muted);
+  font-size: 13px;
+  font-family: inherit;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+@media (min-width: 1024px) { .rating { margin-top: 24px; } }
+.rating-score { font-weight: 600; color: #fff; }
+.rating svg { color: #fff; }
+
+/* ===================================================================
+   StoreNavigationBar
+   features/store/components/StoreNavigationbar/StoreNavigationBar.tsx
+   `scrollbar-hide flex CHIP_GAP overflow-x-scroll whitespace-nowrap
+    px-gutter pb-space-8`
+   Each pill = StoreNavigationItem (glassy Button + optional 32px round image).
+   =================================================================== */
+.nav-pills {
+  position: sticky;
+  top: 20px;
+  z-index: 15;
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  white-space: nowrap;
+  padding: 0 var(--gutter) 8px;
+  margin-top: 24px;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.nav-pills::-webkit-scrollbar { display: none; }
+@media (min-width: 1024px) { .nav-pills { top: 28px; } }
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  height: 40px;
+  padding: 0 14px;
+  gap: 8px;
+  border-radius: 999px;
+  background-color: var(--glass-bg);
+  border: 0.5px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 120ms ease, background-color 120ms ease;
+}
+.pill:hover { background-color: rgba(62, 50, 40, 0.92); }
+.pill:active { transform: scale(0.98); }
+/* When pill has image: pl-space-4 pt-space-4 pb-space-4. */
+.pill-with-image { padding: 4px 14px 4px 4px; }
+.pill-thumb {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.pill-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.pill-label { line-height: 1; }
+
+/* ===================================================================
+   Page body — sits below the hero overlay.
+   The negative margin on .cover-sticky leaves room for this content
+   to flow naturally over the page bg color.
+   =================================================================== */
+.page-body {
+  position: relative;
+  z-index: 5;
+  margin: 0 auto;
+  max-width: var(--page-max);
+  padding: 32px var(--gutter) 80px;
+  background: var(--bg);
+}
+
+/* ===================================================================
+   StoreCollections (Tile, isStoreCollection)
+   features/store/components/StoreCollections.tsx
+   `flex flex-wrap` with `w-1/2 sm:w-1/3 md:w-1/4 px-space-6 md:px-space-8`.
+   =================================================================== */
+.collections {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -8px;
+  row-gap: 12px;
+}
+@media (min-width: 768px) { .collections { row-gap: 16px; } }
+
+.tile {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: var(--text);
+  width: 50%;
+  padding: 0 6px;
+}
+@media (min-width: 640px) { .tile { width: 33.3333%; } }
+@media (min-width: 768px) { .tile { width: 25%; padding: 0 8px; } }
+
+/* Tile frame: components/Tile/Tile.tsx LegacyTile isStoreCollection branch.
+   border-image + bg-overlay-inverse-06 + p-space-4 + radius-20 +
+   backdrop-blur-lg + shadow-s. aspect-square mobile, md:aspect-video.
+   Hover: -translate-y-space-2 + shadow-m. */
+.tile-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  padding: 4px;
+  border: 1px solid var(--border-image);
+  border-radius: 20px;
+  background-color: var(--bg-overlay-inverse-06);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.12),
+    var(--shadow-s);
+  overflow: hidden;
+  transition: transform 150ms ease, box-shadow 150ms ease;
+}
+@media (min-width: 768px) { .tile-frame { aspect-ratio: 16 / 9; } }
+.tile:hover .tile-frame {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-m);
+}
+.tile-image {
+  position: absolute;
+  inset: 4px;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #1a1a1a;
+}
+.tile-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 200ms ease;
+}
+.tile:hover .tile-image img { transform: scale(1.02); }
+.tile-label {
+  margin-top: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  letter-spacing: 0.1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ===================================================================
+   StoreProductSearchList header
+   features/store/components/StoreProductSearchList.tsx
+   Renders a title and a SearchBar; styled as glassy on themed background.
+   =================================================================== */
+.products { margin-top: 48px; }
+.products-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+.products-title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+.store-search {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 16px;
+  border-radius: 999px;
+  background-color: var(--glass-bg);
+  border: 0.5px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: blur(20px) saturate(140%);
+  color: var(--text-muted);
+  font-size: 14px;
+  cursor: pointer;
+  font-family: inherit;
+  min-width: 240px;
+}
+.store-search svg { color: var(--text); }
+.products-grid-placeholder {
+  height: 320px;
+  border: 1px dashed rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+}
+
+/* ===================================================================
+   Global Shop omnibox (app shell, fixed bottom)
+   =================================================================== */
+.omnibox-wrap {
+  position: fixed;
+  left: 0; right: 0; bottom: 18px;
+  display: flex;
+  justify-content: center;
+  z-index: 50;
+  padding: 0 16px;
+  pointer-events: none;
+}
+.omnibox {
+  pointer-events: auto;
+  width: 100%;
+  max-width: 460px;
+  height: 52px;
+  background: #ececec;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  padding: 6px 6px 6px 22px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.30);
+}
+.omnibox input {
+  flex: 1;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #2a2a2a;
+  font-size: 14px;
+  height: 100%;
+  font-family: inherit;
+}
+.omnibox input::placeholder { color: #6b6b6b; text-align: center; }
+.omnibox-go {
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 120ms ease;
+}
+.omnibox-go:hover { background: var(--accent-hover); }
+
+/* ===================================================================
+   StoreMenu side sheet
+   features/store/components/StoreMenu/StoreMenu.tsx +
+   components/SideSheet/SideSheet.tsx
+   =================================================================== */
+body.sheet-locked { overflow: hidden; }
+.sheet { position: fixed; inset: 0; z-index: 100; pointer-events: none; }
+.sheet[aria-hidden="false"] { pointer-events: auto; }
+.sheet-gradient {
+  position: absolute; inset: 0;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.00) 0%, rgba(0, 0, 0, 0.36) 69.75%);
+  opacity: 0;
+  transition: opacity 300ms ease-out;
+  pointer-events: none;
+}
+.sheet-scrim {
+  position: absolute; inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transition: opacity 300ms ease-out;
+}
+.sheet[aria-hidden="false"] .sheet-gradient,
+.sheet[aria-hidden="false"] .sheet-scrim { opacity: 1; }
+
+.sheet-panel {
+  position: absolute;
+  top: 0; left: 0; bottom: 0;
+  width: 100vw;
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  color: var(--text);
+  padding: 24px;
+  overflow: hidden;
+  backdrop-filter: blur(9px);
+  -webkit-backdrop-filter: blur(9px);
+  transform: translateX(-100%);
+  transition: transform 300ms ease-out, box-shadow 300ms ease-out;
+  box-shadow: none;
+}
+.sheet[aria-hidden="false"] .sheet-panel {
+  transform: translateX(0);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.45);
+}
+@media (min-width: 1024px) {
+  .sheet-panel {
+    top: 8px; bottom: 8px; left: 8px;
+    border-radius: 24px;
+    height: calc(100dvh - 16px);
+  }
+}
+.sheet-header {
+  position: absolute;
+  top: 24px; left: 24px; right: 24px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.sheet-header-actions { display: flex; align-items: center; gap: 8px; }
+
+.icon-btn {
+  width: 40px; height: 40px;
+  padding: 0;
+  justify-content: center;
+}
+.follow-pill { height: 40px; padding: 0 14px; gap: 6px; font-weight: 600; }
+.follow-pill[data-following="true"] {
+  background-color: rgba(91, 61, 245, 0.85);
+  border-color: rgba(91, 61, 245, 1);
+}
+.follow-pill[data-following="true"] svg { display: none; }
+
+.sheet-close .i-back { display: none; }
+.sheet-close[data-state="back"] .i-close { display: none; }
+.sheet-close[data-state="back"] .i-back  { display: inline; }
+
+.sheet-body {
+  flex: 1;
+  margin: 0 -20px;
+  padding: 80px 20px 80px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 80px, black calc(100% - 80px), transparent 100%);
+          mask-image: linear-gradient(to bottom, transparent 0%, black 80px, black calc(100% - 80px), transparent 100%);
+}
+.sheet-body::-webkit-scrollbar { display: none; }
+
+@keyframes pushIn { from { transform: translateX(20%);  opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+@keyframes popIn  { from { transform: translateX(-20%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.sheet-page[data-anim="push"] { animation: pushIn 220ms ease-out; }
+.sheet-page[data-anim="pop"]  { animation: popIn  220ms ease-out; }
+.sheet-page[data-anim="fade"] { animation: fadeIn 220ms ease-out; }
+
+.shop-info { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; padding: 24px 0 12px; }
+.shop-logo { width: 64px; height: 64px; border-radius: 50%; overflow: hidden; border: 1px solid rgba(255,255,255,0.12); }
+.shop-logo img { width: 100%; height: 100%; display: block; object-fit: cover; }
+.shop-name { margin: 4px 0 0; font-size: 28px; font-weight: 700; color: #fff; }
+.sheet-rating { padding-left: 0; }
+
+.menu-card {
+  margin-top: 16px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 16px;
+  overflow: hidden;
+  backdrop-filter: blur(8px);
+}
+.menu-card-nav { padding: 8px; margin-top: 28px; }
+.menu-card-titled { padding: 16px; }
+.menu-card-title {
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: rgba(255,255,255,0.7);
+  padding: 0 8px;
+}
+.menu-row {
+  display: flex; align-items: center; gap: 12px;
+  width: 100%;
+  padding: 8px;
+  background: transparent; border: 0;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 16px; font-weight: 500;
+  text-align: left; text-decoration: none;
+  cursor: pointer; font-family: inherit;
+  transition: background 120ms ease;
+}
+.menu-row:hover { background: rgba(255,255,255,0.06); }
+.menu-row-thumb { width: 32px; height: 32px; border-radius: 50%; overflow: hidden; flex-shrink: 0; background: #1a1a1a; }
+.menu-row-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.menu-row-label { flex: 1; }
+.policy-row, .visit-row { padding: 12px 8px; }
+
+.sheet-subpage-title { margin: 0 0 12px; font-size: 24px; font-weight: 700; color: #fff; }
+.sheet-subpage-body { font-size: 15px; line-height: 1.55; color: rgba(255,255,255,0.85); }
+
+/* ---------- Responsive (compact) ---------- */
+@media (max-width: 720px) {
+  .products-header { flex-direction: column; align-items: stretch; }
+  .store-search { width: 100%; }
+}

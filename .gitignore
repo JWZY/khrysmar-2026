@@ -1,0 +1,11 @@
+.DS_Store
+**/.DS_Store
+
+# Local screenshot/CLI artifacts
+--output
+--viewport
+-o
+
+# Local environment files
+.env
+.env.*

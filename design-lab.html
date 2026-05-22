@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Design Lab — Wordmark serif explorations</title>
+<meta name="robots" content="noindex,nofollow" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Fraunces:opsz,wght@9..144,300..700&family=Playfair+Display:wght@400;500;600;700&family=DM+Serif+Display&family=Cormorant+Garamond:wght@300;400;500;600;700&family=EB+Garamond:wght@400;500;600;700&family=Bodoni+Moda:opsz,wght@6..96,400;6..96,500;6..96,600;6..96,700&family=Lora:wght@400;500;600;700&family=Spectral:wght@300;400;500;600;700&family=Libre+Caslon+Display&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg-deep:    #1f1611;
+    --bg-warm:    #2e2218;
+    --bg-card:    rgba(255, 255, 255, 0.04);
+    --line:       rgba(255, 255, 255, 0.08);
+    --ink:        #f5efe6;
+    --ink-soft:   rgba(245, 239, 230, 0.74);
+    --muted:      rgba(245, 239, 230, 0.5);
+    --accent:     #b08947;
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    font-family: 'Inter', system-ui, sans-serif;
+    color: var(--ink);
+    background:
+      radial-gradient(1200px 800px at 75% -10%, rgba(176, 137, 71, 0.10), transparent 60%),
+      radial-gradient(1000px 700px at 5% 110%, rgba(138, 58, 44, 0.10), transparent 65%),
+      linear-gradient(180deg, var(--bg-warm) 0%, var(--bg-deep) 100%);
+    background-attachment: fixed;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  .lab-header {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 56px clamp(20px, 4vw, 48px) 24px;
+  }
+  .lab-eyebrow {
+    font-size: 0.72rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    font-weight: 500;
+    color: var(--accent);
+    margin: 0 0 14px;
+  }
+  .lab-title {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: clamp(28px, 4vw, 44px);
+    line-height: 1.05;
+    letter-spacing: -0.015em;
+    margin: 0 0 12px;
+  }
+  .lab-sub {
+    color: var(--ink-soft);
+    max-width: 60ch;
+    font-size: 15px;
+    line-height: 1.6;
+    margin: 0;
+  }
+  .lab-sub a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(176, 137, 71, 0.4); }
+  .lab-sub a:hover { border-bottom-color: var(--accent); }
+
+  .grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px clamp(20px, 4vw, 48px) 96px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  @media (min-width: 720px) {
+    .grid { grid-template-columns: 1fr 1fr; gap: 20px; }
+  }
+
+  .card {
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    background: var(--bg-card);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    padding: 28px clamp(20px, 3vw, 36px) 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    min-height: 240px;
+    transition: border-color .25s ease, transform .25s ease;
+  }
+  .card:hover {
+    border-color: rgba(255, 255, 255, 0.18);
+    transform: translateY(-2px);
+  }
+
+  .meta {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .meta-name {
+    font-size: 0.7rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .meta-vibe {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.4;
+  }
+
+  .specimen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 22px 8px 8px;
+    flex: 1;
+    filter: drop-shadow(0 2px 14px rgba(0, 0, 0, 0.4));
+  }
+
+  /* Big serif word + small tagline beneath, mirroring the hero wordmark. */
+  .word {
+    font-weight: 700;
+    font-size: clamp(40px, 6.4vw, 72px);
+    line-height: 0.95;
+    letter-spacing: 0.005em;
+    color: #fff;
+    margin: 0;
+  }
+  /* Wraps the brand name so JS can measure its width independently of .tag. */
+  .word-name {
+    display: block;
+  }
+  .tag {
+    display: block;
+    font-weight: 500;
+    font-size: 0.5em;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    margin-top: 14px;
+    color: rgba(255, 255, 255, 0.86);
+  }
+
+  /* Each variant just swaps the font-family on the wordmark + tagline. */
+  .ff-fraunces .word, .ff-fraunces .tag { font-family: 'Fraunces', serif; font-variation-settings: "opsz" 144, "SOFT" 30; }
+  .ff-playfair .word, .ff-playfair .tag { font-family: 'Playfair Display', serif; }
+  .ff-dmserif  .word, .ff-dmserif  .tag { font-family: 'DM Serif Display', serif; }
+  .ff-cormorant .word, .ff-cormorant .tag { font-family: 'Cormorant Garamond', serif; }
+  .ff-cormorant .word { font-weight: 600; letter-spacing: 0.01em; }
+  .ff-ebgaramond .word, .ff-ebgaramond .tag { font-family: 'EB Garamond', serif; }
+  .ff-bodoni .word, .ff-bodoni .tag { font-family: 'Bodoni Moda', serif; }
+  .ff-lora .word, .ff-lora .tag { font-family: 'Lora', serif; }
+  .ff-spectral .word, .ff-spectral .tag { font-family: 'Spectral', serif; }
+  .ff-caslon .word, .ff-caslon .tag { font-family: 'Libre Caslon Display', serif; }
+
+  /* DM Serif Display is single-weight (400), so don't force 700. */
+  .ff-dmserif .word { font-weight: 400; }
+  .ff-dmserif .tag  { font-weight: 400; }
+  /* Caslon Display is also single-weight. */
+  .ff-caslon .word { font-weight: 400; }
+  .ff-caslon .tag  { font-weight: 400; }
+
+  .footer {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 clamp(20px, 4vw, 48px) 64px;
+    color: var(--muted);
+    font-size: 13px;
+  }
+  .footer a { color: var(--ink-soft); }
+
+  /* ---- Case-treatment toggle (segmented control) ---- */
+  .case-toggle {
+    display: inline-flex;
+    align-items: center;
+    margin-top: 22px;
+    padding: 4px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--line);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  .case-toggle button {
+    appearance: none;
+    border: 0;
+    background: transparent;
+    color: var(--ink-soft);
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 9px 16px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background-color .2s ease, color .2s ease;
+  }
+  .case-toggle button:hover { color: var(--ink); }
+  .case-toggle button[aria-pressed="true"] {
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
+  }
+
+  /* ---- Case variants — applied via [data-case] on the grid ---- */
+
+  /* "All caps": uppercase the brand word + add caps tracking. Tagline
+     is already uppercase by default rule on .tag, so no change. */
+  [data-case="upper"] .word {
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  /* "All lowercase": lowercase both word + tag, and pull the tag's
+     tracking way down (Goudy: lowercase doesn't want letterspacing). */
+  [data-case="lower"] .word {
+    text-transform: lowercase;
+  }
+  [data-case="lower"] .tag {
+    text-transform: lowercase;
+    letter-spacing: 0.06em;
+  }
+</style>
+</head>
+<body>
+
+<header class="lab-header">
+  <p class="lab-eyebrow">Design Lab · Wordmark</p>
+  <h1 class="lab-title">Serif explorations for "Khrysmar Music Studio"</h1>
+  <p class="lab-sub">Each card swaps the serif used for the wordmark and tagline. Body type stays in <strong>Inter</strong> to mirror the live page. Click <a href="index.html">← back to home</a> to compare against the current Fraunces baseline.</p>
+
+  <div class="case-toggle" role="group" aria-label="Case treatment">
+    <button type="button" data-case="default" aria-pressed="true">Current</button>
+    <button type="button" data-case="upper"   aria-pressed="false">All caps</button>
+    <button type="button" data-case="lower"   aria-pressed="false">All lowercase</button>
+  </div>
+</header>
+
+<section class="grid" id="grid" data-case="default">
+
+  <article class="card ff-fraunces">
+    <div class="meta">
+      <span class="meta-name">Fraunces · current</span>
+      <span class="meta-vibe">Variable, expressive, neo-modern. Soft optical sizing.</span>
+    </div>
+    <div class="specimen">
+      <p class="word"><span class="word-name">Khrysmar</span><span class="tag">Music Studio</span></p>
+    </div>
+  </article>
+
+  <article class="card ff-playfair">
+    <div class="meta">
+      <span class="meta-name">Playfair Display</span>
+      <span class="meta-vibe">High-contrast didone. Editorial, magazine cover energy.</span>
+    </div>
+    <div class="specimen">
+      <p class="word"><span class="word-name">Khrysmar</span><span class="tag">Music Studio</span></p>
+    </div>
+  </article>
+
+  <article class="card ff-dmserif">
+    <div class="meta">
+      <span class="meta-name">DM Serif Display</span>
+      <span class="meta-vibe">Sharp ball terminals. Modern luxury, fashion-mag.</span>
+    </div>
+    <div class="specimen">
+      <p class="word"><span class="word-name">Khrysmar</span><span class="tag">Music Studio</span></p>
+    </div>
+  </article>
+
+  <article class="card ff-cormorant">
+    <div class="meta">
+      <span class="meta-name">Cormorant Garamond</span>
+      <span class="meta-vibe">Refined classical. Calligraphic, restrained, elegant.</span>
+    </div>
+    <div class="specimen">
+      <p class="word"><span class="word-name">Khrysmar</span><span class="tag">Music Studio</span></p>
+    </div>
+  </article>
+
+  <article class="card ff-ebgaramond">
+    <div class="meta">
+      <span class="meta-name">EB Garamond</span>
+      <span class="meta-vibe">Warm humanist Garamond. Bookish, traditional, scholarly.</span>
+    </div>
+    <div class="specimen">
+      <p class="word"><span class="word-name">Khrysmar</span><span class="tag">Music Studio</span></p>
+    </div>
+  </article>
+
+  <article class="card ff-bodoni">
+    <div class="meta">
+      <span class="meta-name">Bodoni Moda</span>
+      <span class="meta-vibe">Razor-thin hairlines, dramatic contrast. Couture / Vogue.</span>
+    </div>
+    <div class="specimen">
+      <p class="word"><span class="word-name">Khrysmar</span><span class="tag">Music Studio</span></p>
+    </div>
+  </article>
+
+  <article class="card ff-lora">
+    <div class="meta">
+      <span class="meta-name">Lora</span>
+      <span class="meta-vibe">Contemporary book serif. Friendly, approachable, calm.</span>
+    </div>
+    <div class="specimen">
+      <p class="word"><span class="word-name">Khrysmar</span><span class="tag">Music Studio</span></p>
+    </div>
+  </article>
+
+  <article class="card ff-spectral">
+    <div class="meta">
+      <span class="meta-name">Spectral</span>
+      <span class="meta-vibe">Modern screen-tuned serif. Quiet authority, editorial.</span>
+    </div>
+    <div class="specimen">
+      <p class="word"><span class="word-name">Khrysmar</span><span class="tag">Music Studio</span></p>
+    </div>
+  </article>
+
+  <article class="card ff-caslon">
+    <div class="meta">
+      <span class="meta-name">Libre Caslon Display</span>
+      <span class="meta-vibe">Classical with character. Heritage, gallery, theatrical.</span>
+    </div>
+    <div class="specimen">
+      <p class="word"><span class="word-name">Khrysmar</span><span class="tag">Music Studio</span></p>
+    </div>
+  </article>
+
+</section>
+
+<footer class="footer">
+  <p>Internal design exploration · not linked from the public site.</p>
+</footer>
+
+<script>
+  (function () {
+    var grid = document.getElementById('grid');
+    var buttons = document.querySelectorAll('.case-toggle button');
+
+    // Measure each card's wordmark and adjust the tagline's letter-spacing
+    // so the tagline rendered width matches the wordmark width. This is
+    // "optical balance" — the tracking needed differs per font and per case
+    // mode, so we compute it dynamically rather than hand-tuning values.
+    function autofit() {
+      document.querySelectorAll('.word').forEach(function (wordEl) {
+        var nameEl = wordEl.querySelector('.word-name');
+        var tagEl  = wordEl.querySelector('.tag');
+        if (!nameEl || !tagEl) return;
+
+        // Reset tag tracking so we measure its natural (un-tracked) width.
+        tagEl.style.letterSpacing = '0';
+
+        var targetWidth = nameEl.getBoundingClientRect().width;
+        var baseWidth   = tagEl.getBoundingClientRect().width;
+
+        // Letter-spacing in CSS is added between every adjacent character
+        // pair, so a string of N chars has (N - 1) gaps to distribute over.
+        var charCount = tagEl.textContent.length;
+        var gaps = Math.max(1, charCount - 1);
+
+        // If the tag is naturally wider than the wordmark we'd need negative
+        // tracking to shrink it — that reads cramped, so clamp to 0 and
+        // accept a slightly wider tag in those (rare) fonts.
+        var perGap = Math.max(0, (targetWidth - baseWidth) / gaps);
+
+        tagEl.style.letterSpacing = perGap.toFixed(2) + 'px';
+      });
+    }
+
+    // Run autofit after web fonts have actually loaded — otherwise we'd
+    // measure fallback metrics and lock in the wrong tracking.
+    function runWhenReady() {
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(autofit);
+      } else {
+        setTimeout(autofit, 200);
+      }
+    }
+    runWhenReady();
+
+    // Re-fit on resize (debounced) since clamp() font-size changes widths.
+    var resizeTimer;
+    window.addEventListener('resize', function () {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(autofit, 80);
+    });
+
+    // Case toggle: swap the data attribute, then re-fit on the next frame
+    // so the new text-transform has been applied before we measure.
+    buttons.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var mode = btn.getAttribute('data-case');
+        grid.setAttribute('data-case', mode);
+        buttons.forEach(function (b) {
+          b.setAttribute('aria-pressed', b === btn ? 'true' : 'false');
+        });
+        requestAnimationFrame(autofit);
+      });
+    });
+  })();
+</script>
+
+</body>
+</html>
