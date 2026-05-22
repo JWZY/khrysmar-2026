@@ -2089,3 +2089,148 @@ body.page-gallery .page-cover-image { object-position: center 42%; }
   transition: opacity .7s ease, transform .7s ease;
 }
 .page .reveal.in { opacity: 1; transform: none; }
+
+/* Family Trio page — compact, members-first composition. */
+.page-family main.page-body {
+  padding-top: clamp(28px, 5vw, 56px);
+}
+
+.page-family .family-members-showcase {
+  margin-top: 0;
+  padding-top: clamp(96px, 12vw, 148px);
+}
+
+.page-family .family-members-showcase .section-head {
+  margin-bottom: clamp(28px, 4vw, 44px);
+}
+
+.page-family .family-members-showcase .section-head h2 {
+  max-width: none;
+}
+
+.page-family .members .member img {
+  aspect-ratio: 4 / 3;
+}
+
+.page-family .members .member:first-child img {
+  object-position: center 24%;
+}
+
+.page-family .family-summary {
+  max-width: 880px;
+  margin: clamp(34px, 5vw, 56px) auto 0;
+  padding-top: clamp(28px, 4vw, 40px);
+  border-top: 1px solid rgba(255,255,255,0.12);
+  text-align: center;
+}
+
+.page-family .family-summary p {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.page-family .family-summary .lead {
+  max-width: 32ch;
+  font-family: 'Fraunces', serif;
+  font-size: clamp(1.7rem, 3vw, 2.55rem);
+  line-height: 1.12;
+  color: #fff;
+}
+
+.page-family .family-summary p:not(.lead) {
+  max-width: 64ch;
+}
+
+.page-family .family-booking-grid {
+  gap: 4px;
+  padding: 4px;
+  overflow: hidden;
+}
+
+@media (min-width: 900px) {
+  .page-family .family-booking-grid {
+    grid-template-columns: 5fr 6fr;
+  }
+}
+
+.page-family .booking-info {
+  position: relative;
+  isolation: isolate;
+  min-height: 520px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  overflow: hidden;
+  border-radius: 16px;
+  padding: clamp(28px, 4vw, 56px);
+  background:
+    linear-gradient(180deg, rgba(0,0,0,0.12), rgba(0,0,0,0.72)),
+    url('https://raw.githubusercontent.com/khrysmar/khrysmar.github.io/master/images/family.jpg') center / cover;
+}
+
+.page-family .booking-info::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(90deg, rgba(34,7,0,0.18), rgba(34,7,0,0.74)),
+    linear-gradient(0deg, rgba(34,7,0,0.75), rgba(34,7,0,0.08));
+}
+
+.page-family .booking-info h2 {
+  max-width: 11ch;
+}
+
+.page-family .booking-info > p {
+  max-width: 37ch;
+}
+
+.page-family .booking-links {
+  margin-top: clamp(24px, 4vw, 36px);
+}
+
+.page-family .family-booking-grid .form {
+  align-content: center;
+  padding: clamp(24px, 4vw, 52px);
+}
+
+@media (max-width: 700px) {
+  .page-family .family-members-showcase {
+    padding-top: 92px;
+    overflow: hidden;
+  }
+
+  .page-family .members .member img {
+    aspect-ratio: 4 / 5;
+  }
+
+  .page-family .family-members-showcase .section-head h2 {
+    max-width: 280px;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 2rem;
+    line-height: 1.08;
+  }
+
+  .page-family .family-summary {
+    text-align: left;
+  }
+
+  .page-family .family-summary .lead,
+  .page-family .family-summary p {
+    max-width: none;
+  }
+
+  .page-family .booking-info {
+    min-height: 420px;
+  }
+
+  .page-family .booking-info h2 {
+    max-width: 13ch;
+  }
+
+  .page-family .family-booking-grid .form {
+    padding: 24px 16px 28px;
+  }
+}
