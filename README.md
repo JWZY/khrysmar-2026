@@ -10,6 +10,10 @@ python3 -m http.server 8000
 
 Then open `http://localhost:8000/`.
 
+## Publishing
+
+The site is published at [javanwang.com/khrysmar-2026](https://javanwang.com/khrysmar-2026/) using GitHub Pages from the root of `main`. Pushing changes to `main` automatically updates the site. The `.nojekyll` file serves the static files directly, and the domain is inherited from the account's main GitHub Pages site.
+
 ## Content source
 
 Content is maintained from [khrysmar/khrysmar.github.io](https://github.com/khrysmar/khrysmar.github.io), while this repository owns the redesign.
