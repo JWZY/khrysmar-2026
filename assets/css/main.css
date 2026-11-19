@@ -783,6 +783,13 @@ body.home {
 body.home .site-header,
 body.home .site-footer { display: none; }
 
+/* Keep the hero and its tiles in one viewport when the footer follows. */
+.home .home-stage {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
 /* ----------------------------------------------------------------------------
    Top promo banner — full-width static bar above the cover. Hosts the sash.
    Shared between the home page and inner pages.
@@ -854,13 +861,11 @@ body.home .site-footer { display: none; }
 }
 
 /* ----------------------------------------------------------------------------
-   CoverImage — sticky behind everything.
-   On desktop: 55vh tall, with margin-bottom: -55vh so subsequent siblings
-   overlay it. The bottom gradient fades the image into the page bg.
+   CoverImage — full viewport, with the tiles overlaid by a negative margin.
+   Scrolls with its stage so the studio footer remains visible below it.
    ---------------------------------------------------------------------------- */
 .home .cover-sticky {
-  position: sticky;
-  top: 0;
+  position: relative;
   width: 100%;
   padding: 12px 12px 0;            /* uniform top + side inset; bottom inset is on page-body */
   /* Negative margin = -cover height. Pulls .page-body up so the tiles row sits
@@ -1690,6 +1695,7 @@ body.page-gallery .page-cover-image { object-position: center 42%; }
 
 .page .creds {
   list-style: none;
+  gap: 0;
   padding: 0;
   margin: 28px 0 0;
   border-top: 1px solid rgba(255,255,255,0.14);
@@ -1699,6 +1705,7 @@ body.page-gallery .page-cover-image { object-position: center 42%; }
   grid-template-columns: 160px 1fr;
   gap: 16px;
   padding: 16px 0;
+  border-top: 0;
   border-bottom: 1px solid rgba(255,255,255,0.14);
   font-size: 0.95rem;
 }
@@ -1711,6 +1718,13 @@ body.page-gallery .page-cover-image { object-position: center 42%; }
   align-self: center;
 }
 .page .creds li span { color: rgba(255,255,255,0.85); }
+
+@media (max-width: 600px) {
+  .page .creds li {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+}
 
 .page .pullquote {
   font-family: 'Fraunces', serif;
@@ -1825,6 +1839,30 @@ body.page-gallery .page-cover-image { object-position: center 42%; }
   border-radius: 16px;
 }
 
+.page .recital-photo {
+  margin: 0 0 20px;
+}
+
+.page .recital-photo img {
+  width: 100%;
+  height: auto;
+  border-radius: 16px;
+}
+
+.page .recital-video-grid video {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: contain;
+  background: #100804;
+  border-radius: 16px;
+}
+
+.page .recital-video-grid video:focus-visible {
+  outline: 2px solid var(--paper);
+  outline-offset: 4px;
+}
+
 .page .members {
   display: grid;
   grid-template-columns: 1fr;
@@ -1886,6 +1924,59 @@ body.page-gallery .page-cover-image { object-position: center 42%; }
 .page .feature-banner .container { max-width: 720px; padding: 0; margin: 0 auto; }
 .page .feature-banner h2 { color: #fff; }
 .page .feature-banner p { color: rgba(255,255,255,0.88); }
+
+.page-lessons .lesson-contact {
+  padding: clamp(32px, 6vw, 72px);
+  text-align: left;
+}
+
+.page-lessons .lesson-contact .container {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(32px, 6vw, 80px);
+  max-width: none;
+}
+
+.page-lessons .lesson-contact h2 { margin-bottom: 24px; }
+.page-lessons .lesson-contact p { max-width: none; margin: 0; }
+.page-lessons .lesson-contact p + p { margin-top: 8px; }
+
+.lesson-contact-details {
+  display: grid;
+  gap: 24px;
+  margin: 0;
+}
+
+.lesson-contact-details dt {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.75);
+}
+
+.lesson-contact-details dd {
+  margin: 5px 0 0;
+  color: #fff;
+  overflow-wrap: anywhere;
+}
+
+.lesson-contact-details a {
+  text-decoration: underline;
+  text-decoration-color: rgba(255,255,255,0.4);
+  text-underline-offset: 4px;
+}
+
+.lesson-contact-details a:hover { text-decoration-color: #fff; }
+.lesson-contact-details a:focus-visible { outline: 2px solid #fff; outline-offset: 5px; }
+
+@media (max-width: 767px) {
+  .page-lessons .lesson-contact .container {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 40px;
+  }
+}
 
 .page .btn,
 .page .btn.light {
@@ -1979,6 +2070,19 @@ body.page-gallery .page-cover-image { object-position: center 42%; }
   gap: 8px;
   margin: 0 0 clamp(28px, 4vw, 48px);
 }
+
+.page-concerts main.page-body,
+.page-concerts .concert-archive {
+  padding-top: 0;
+}
+
+.page-concerts .year-filter {
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  padding: clamp(28px, 4vw, 48px) 0;
+}
+
 .page .year-filter .chip {
   display: inline-flex;
   align-items: center;
@@ -2029,58 +2133,54 @@ body.page-gallery .page-cover-image { object-position: center 42%; }
   color: rgba(255,255,255,0.6);
 }
 
-.page .page-footer {
+.page-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 32px 48px;
   border-top: 1px solid rgba(255,255,255,0.1);
   padding: clamp(40px, 6vw, 64px) 12px clamp(28px, 4vw, 40px);
+  width: 100%;
   max-width: var(--hp-page-max);
   margin: 0 auto;
 }
-@media (min-width: 768px) { .page .page-footer { padding-left: 16px; padding-right: 16px; } }
-.page .page-footer .row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 24px 48px;
-  justify-content: space-between;
-  align-items: flex-start;
-  padding-bottom: 24px;
-}
-.page .page-footer .brand {
+@media (min-width: 768px) { .page-footer { padding-left: 16px; padding-right: 16px; } }
+.page-footer .footer-brand { min-width: 0; }
+.page-footer .brand {
+  display: inline-block;
   font-family: 'Fraunces', serif;
   color: #fff;
   font-size: 1.25rem;
   font-style: italic;
 }
-.page .page-footer .brand small {
+.page-footer .brand small {
   display: block;
   font-family: 'Inter', sans-serif;
   font-style: normal;
-  font-size: 0.66rem;
+  font-size: 0.7rem;
   letter-spacing: 0.3em;
   text-transform: uppercase;
   color: rgba(255,255,255,0.5);
   margin-top: 4px;
 }
-.page .page-footer nav { display: flex; flex-wrap: wrap; gap: 16px 22px; }
-.page .page-footer nav a { color: rgba(255,255,255,0.78); font-size: 0.9rem; text-decoration: none; }
-.page .page-footer nav a:hover { color: #fff; }
-.page .page-footer .socials { display: flex; gap: 16px; }
-.page .page-footer .socials a {
-  color: rgba(255,255,255,0.78);
-  font-size: 0.9rem;
-  text-decoration: none;
-  border-bottom: 1px solid rgba(255,255,255,0.2);
-  padding-bottom: 2px;
-}
-.page .page-footer .socials a:hover { color: #fff; border-bottom-color: #fff; }
-.page .page-footer .meta {
+.page-footer nav {
   display: flex;
   flex-wrap: wrap;
-  gap: 16px;
-  justify-content: space-between;
+  justify-content: flex-end;
+  gap: 16px 22px;
+}
+.page-footer nav a { color: rgba(255,255,255,0.78); font-size: 0.9rem; text-decoration: none; }
+.page-footer nav a:hover { color: #fff; }
+.page-footer a:focus-visible { outline: 2px solid var(--paper); outline-offset: 5px; }
+.page-footer .copyright {
+  margin: 16px 0 0;
   font-size: 0.8rem;
-  color: rgba(255,255,255,0.5);
-  padding-top: 22px;
-  border-top: 1px solid rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.65);
+}
+
+@media (max-width: 800px) {
+  .page-footer { flex-direction: column; }
+  .page-footer nav { justify-content: flex-start; }
 }
 
 .page .reveal {
@@ -2141,10 +2241,39 @@ body.page-gallery .page-cover-image { object-position: center 42%; }
   max-width: 64ch;
 }
 
+.page-family .family-gallery {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+@media (min-width: 768px) {
+  .page-family .family-gallery {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
 .page-family .family-booking-grid {
-  gap: 4px;
+  --booking-photo: url('https://raw.githubusercontent.com/khrysmar/khrysmar.github.io/master/images/family.jpg');
+  --booking-shade: #180601;
+  position: relative;
+  isolation: isolate;
+  gap: 0;
   padding: 4px;
   overflow: hidden;
+  background: #1a1010;
+  border: 1px solid var(--hp-tile-border);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255,255,255,0.12),
+    var(--hp-shadow-s);
+}
+
+.page-family .family-booking-grid::before {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  z-index: -1;
+  border-radius: 16px;
+  background: var(--booking-shade);
+  pointer-events: none;
 }
 
 @media (min-width: 900px) {
@@ -2160,22 +2289,22 @@ body.page-gallery .page-cover-image { object-position: center 42%; }
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  overflow: hidden;
-  border-radius: 16px;
   padding: clamp(28px, 4vw, 56px);
-  background:
-    linear-gradient(180deg, rgba(0,0,0,0.12), rgba(0,0,0,0.72)),
-    url('https://raw.githubusercontent.com/khrysmar/khrysmar.github.io/master/images/family.jpg') center / cover;
 }
 
+/* Frame the sharp portrait within the left column and feather its edge. */
 .page-family .booking-info::before {
   content: "";
   position: absolute;
   inset: 0;
   z-index: -1;
+  border-radius: 16px 0 0 16px;
+  pointer-events: none;
   background:
-    linear-gradient(90deg, rgba(34,7,0,0.18), rgba(34,7,0,0.74)),
-    linear-gradient(0deg, rgba(34,7,0,0.75), rgba(34,7,0,0.08));
+    linear-gradient(0deg, var(--booking-shade), rgba(24,6,1,0.72) 20%, rgba(24,6,1,0.42) 70%),
+    var(--booking-photo) center 35% / cover no-repeat;
+  -webkit-mask-image: linear-gradient(90deg, #000 62%, transparent);
+  mask-image: linear-gradient(90deg, #000 62%, transparent);
 }
 
 .page-family .booking-info h2 {
@@ -2193,6 +2322,112 @@ body.page-gallery .page-cover-image { object-position: center 42%; }
 .page-family .family-booking-grid .form {
   align-content: center;
   padding: clamp(24px, 4vw, 52px);
+}
+
+.page-family .family-booking-grid .form input,
+.page-family .family-booking-grid .form textarea {
+  background: rgba(255,248,236,0.025);
+  border-color: rgba(255,248,236,0.28);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  caret-color: var(--paper);
+}
+
+.page-family .family-booking-grid .form input::placeholder,
+.page-family .family-booking-grid .form textarea::placeholder {
+  color: rgba(255,248,236,0.78);
+}
+
+.page-family .family-booking-grid .form input:hover,
+.page-family .family-booking-grid .form textarea:hover {
+  border-color: rgba(255,248,236,0.48);
+}
+
+.page-family .family-booking-grid .form input:focus,
+.page-family .family-booking-grid .form textarea:focus {
+  background: rgba(255,248,236,0.065);
+  border-color: rgba(255,248,236,0.85);
+  outline: 2px solid rgba(255,248,236,0.65);
+  outline-offset: 3px;
+}
+
+@media (max-width: 899px) {
+  .page-family .booking-info::before {
+    border-radius: 16px 16px 0 0;
+    -webkit-mask-image: linear-gradient(180deg, #000 65%, transparent);
+    mask-image: linear-gradient(180deg, #000 65%, transparent);
+  }
+}
+
+/* Shared location and affiliate content from the original studio site. */
+.studio-section {
+  width: 100%;
+  max-width: var(--hp-page-max);
+  margin: 0 auto;
+  padding: clamp(40px, 6vw, 64px) 12px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+@media (min-width: 768px) {
+  .studio-section { padding-left: 16px; padding-right: 16px; }
+}
+
+.studio-details {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  gap: clamp(28px, 4vw, 56px);
+  align-items: center;
+  color: var(--paper);
+}
+
+.studio-details h2 {
+  color: var(--paper);
+  font-size: clamp(1.75rem, 3vw, 2.4rem);
+  margin-bottom: 20px;
+}
+
+.studio-details address {
+  font-style: normal;
+  margin-bottom: 16px;
+}
+
+.studio-details p {
+  color: rgba(250,246,239,0.8);
+  margin-bottom: 10px;
+}
+
+.studio-details a {
+  color: var(--paper);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-color: rgba(250,246,239,0.35);
+  overflow-wrap: anywhere;
+}
+
+.studio-details a:hover { text-decoration-color: var(--paper); }
+.studio-details a:focus-visible { outline: 2px solid var(--paper); outline-offset: 5px; }
+
+.studio-details .studio-affiliate {
+  margin-top: 28px;
+}
+
+.studio-affiliate p { font-size: 0.85rem; }
+.studio-affiliate a { display: inline-block; }
+.studio-affiliate img { width: 140px; height: auto; }
+
+.studio-map {
+  width: 100%;
+  height: 280px;
+  border: 0;
+  border-radius: 16px;
+  background: rgba(250,246,239,0.04);
+}
+
+.home .studio-section { margin-top: 24px; }
+
+@media (max-width: 700px) {
+  .studio-details { grid-template-columns: minmax(0, 1fr); }
+  .studio-map { height: 240px; }
 }
 
 @media (max-width: 700px) {

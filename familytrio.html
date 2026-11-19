@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="referrer" content="strict-origin-when-cross-origin" />
 <title>Skira Family Trio — Khrysmar Music Studio</title>
 <meta name="description" content="The Skira Family Trio: Oksana on piano, Khrystyna on flute, and Marta on violin. Available for weddings, private events, and cultural performances across Toronto." />
 <meta name="theme-color" content="#2e2218" />
@@ -11,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..700,30..100;1,9..144,300..600,30..100&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="assets/css/main.css" />
+<link rel="stylesheet" href="assets/css/main.css?v=20261119-9" />
 </head>
 <body class="page page-family">
 
@@ -59,35 +60,54 @@
     <div class="container">
       <div class="section-head reveal">
         <span class="eyebrow">Skira Family Trio</span>
-        <h2>Three voices, one ensemble</h2>
+        <h2>Oksana, Khrystyna, and Marta Skira perform as a mother-daughters trio across the Greater Toronto Area</h2>
+        <div class="family-summary">
+          <p>The trio brings piano, flute, and violin to weddings, cultural events, private celebrations, holidays, and recitals. Oksana introduced her daughters to instruments at an early age; both studied with private teachers who encouraged them to pursue music professionally.</p>
+        </div>
       </div>
       <div class="members">
-        <figure class="member reveal">
-          <img src="https://raw.githubusercontent.com/khrysmar/khrysmar.github.io/master/images/oksana.jpg" alt="Oksana Skira on piano" />
+        <figure class="member reveal" tabindex="0">
+          <div class="member-card">
+            <img src="https://raw.githubusercontent.com/khrysmar/khrysmar.github.io/master/images/oksana.jpg" alt="Oksana Skira on piano" />
+            <div class="member-bio">
+              <h3>Oksana Skira</h3>
+              <p>Concert pianist, educator, and accompanist. Oksana anchors the trio on piano and brings decades of performance and teaching experience to every program.</p>
+            </div>
+            <span class="member-toggle" aria-hidden="true"></span>
+          </div>
           <figcaption>
             <strong>Oksana Skira</strong>
             <span>Piano</span>
           </figcaption>
         </figure>
-        <figure class="member reveal">
-          <img src="https://raw.githubusercontent.com/khrysmar/khrysmar.github.io/master/images/khrystyna-flute.jpg" alt="Khrystyna Skira on flute" />
+        <figure class="member reveal" tabindex="0">
+          <div class="member-card">
+            <img src="https://raw.githubusercontent.com/khrysmar/khrysmar.github.io/master/images/khrystyna-flute.jpg" alt="Khrystyna Skira on flute" />
+            <div class="member-bio">
+              <h3>Khrystyna Skira</h3>
+              <p>A member of Metropolitan Winds and former principal flute with the Toronto Youth Wind Orchestra, Khrystyna has toured and performed with TYWO in the GTA, Whistler, BC, and Spain.</p>
+            </div>
+            <span class="member-toggle" aria-hidden="true"></span>
+          </div>
           <figcaption>
             <strong>Khrystyna Skira</strong>
             <span>Flute</span>
           </figcaption>
         </figure>
-        <figure class="member reveal">
-          <img src="https://raw.githubusercontent.com/khrysmar/khrysmar.github.io/master/images/marta-violin.jpg" alt="Marta Skira on violin" />
+        <figure class="member reveal" tabindex="0">
+          <div class="member-card">
+            <img src="https://raw.githubusercontent.com/khrysmar/khrysmar.github.io/master/images/marta-violin.jpg" alt="Marta Skira on violin" />
+            <div class="member-bio">
+              <h3>Marta Skira</h3>
+              <p>Marta served as concertmaster of the string orchestra in a TCDSB Regional Arts Program in Etobicoke. She brings violin to the trio’s recitals, private events, and cultural celebrations.</p>
+            </div>
+            <span class="member-toggle" aria-hidden="true"></span>
+          </div>
           <figcaption>
             <strong>Marta Skira</strong>
             <span>Violin</span>
           </figcaption>
         </figure>
-      </div>
-      <div class="family-summary reveal">
-        <span class="eyebrow">About the trio</span>
-        <p class="lead">Oksana, Khrystyna, and Marta Skira perform as a mother-daughters ensemble across Toronto and the GTA.</p>
-        <p>The trio brings piano, flute, and violin to weddings, cultural events, private celebrations, holidays, and recitals. Their work grows from years of family music-making and professional training, with Khrystyna performing in wind ensembles and Marta serving as a string orchestra concertmaster.</p>
       </div>
     </div>
   </section>
@@ -111,10 +131,9 @@
 
   <section class="section">
     <div class="container">
-      <div class="gallery-grid cols-2 reveal">
+      <div class="gallery-grid family-gallery reveal">
         <figure><img src="https://raw.githubusercontent.com/khrysmar/khrysmar.github.io/master/images/khrysmarta.jpg" alt="" loading="lazy" /></figure>
         <figure><img src="https://raw.githubusercontent.com/khrysmar/khrysmar.github.io/master/images/trio.jpg" alt="" loading="lazy" /></figure>
-        <figure><img src="https://raw.githubusercontent.com/khrysmar/khrysmar.github.io/master/images/family.jpg" alt="" loading="lazy" /></figure>
         <figure><img src="https://raw.githubusercontent.com/khrysmar/khrysmar.github.io/master/images/oksanamarta.jpg" alt="" loading="lazy" /></figure>
       </div>
     </div>
@@ -133,10 +152,10 @@
           </div>
         </div>
         <form class="form reveal" action="mailto:khrysmar777@gmail.com" method="post" enctype="text/plain">
-          <input type="text" name="name" placeholder="Your name" required />
-          <input type="email" name="email" placeholder="Email address" required />
-          <input type="text" name="event" placeholder="Event type & date" />
-          <textarea name="message" placeholder="Tell us about the event" required></textarea>
+          <input type="text" name="name" placeholder="Your name" aria-label="Your name" autocomplete="name" required />
+          <input type="email" name="email" placeholder="Email address" aria-label="Email address" autocomplete="email" required />
+          <input type="text" name="event" placeholder="Event type &amp; date" aria-label="Event type and date" />
+          <textarea name="message" placeholder="Tell us about the event" aria-label="Tell us about the event" required></textarea>
           <button type="submit" class="btn">Send Inquiry</button>
         </form>
       </div>
@@ -144,27 +163,38 @@
   </section>
 </main>
 
-<footer class="page-footer">
-  <div class="row">
-    <div class="brand">Khrysmar<small>Music Studio</small></div>
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="about.html">About</a>
-      <a href="lessons.html">Lessons</a>
-      <a href="familytrio.html">Family Trio</a>
-      <a href="concerts.html">Concerts</a>
-      <a href="gallery.html">Gallery</a>
-      <a href="#contact">Contact</a>
-    </nav>
-    <div class="socials">
-      <a href="https://instagram.com/khrysmarmusic" target="_blank" rel="noopener">Instagram</a>
-      <a href="https://facebook.com/khrysmarmusic" target="_blank" rel="noopener">Facebook</a>
+<section class="studio-section" aria-label="Studio location">
+  <div class="studio-details">
+    <div class="studio-location">
+      <h2>Visit the studio.</h2>
+      <address>19 Burlingame Rd<br />Toronto, ON M8W 1Y7</address>
+      <p><a href="https://maps.app.goo.gl/YP6BBt53famnzdgh6" target="_blank" rel="noopener">Get directions</a></p>
+      <p><a href="mailto:khrysmar777@gmail.com">khrysmar777@gmail.com</a><br /><a href="tel:+14168772902">(416) 877-2902</a></p>
+      <div class="studio-affiliate">
+        <p>Educational affiliate</p>
+        <a href="https://www.dacapomusic.ca/" target="_blank" rel="noopener">
+          <img src="assets/images/dcam-logo-white.png" width="367" height="101" alt="Da Capo Academy of Music" loading="lazy" />
+        </a>
+      </div>
     </div>
+    <iframe class="studio-map" title="Khrysmar Music Studio at 19 Burlingame Road, Toronto" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1717.9805767613027!2d-79.5472449782939!3d43.60055688575137!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x882b49c3c014dd39%3A0x8a57b063fbbcbb6!2sKhrysmar%20Music%20Studio!5e0!3m2!1sen!2sca!4v1598409810577!5m2!1sen!2sca" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
   </div>
-  <div class="meta">
-    <span>© <span id="y">2026</span> Khrysmar Music Studio. All rights reserved.</span>
-    <span>Toronto · Mississauga · Oakville · Burlington</span>
+</section>
+
+<footer class="page-footer">
+  <div class="footer-brand">
+    <a class="brand" href="index.html">Khrysmar<small>Music Studio</small></a>
+    <p class="copyright">© <span id="y">2026</span> Khrysmar Music Studio. All rights reserved.</p>
   </div>
+  <nav aria-label="Footer navigation">
+    <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="lessons.html">Lessons</a>
+    <a href="familytrio.html">Family Trio</a>
+    <a href="concerts.html">Concerts</a>
+    <a href="gallery.html">Gallery</a>
+    <a href="#contact">Contact</a>
+  </nav>
 </footer>
 
 <nav id="home-nav" class="home-nav" aria-label="Site navigation">
